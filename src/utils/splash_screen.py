@@ -22,8 +22,8 @@ class SplashScreen:
         #                   SISTEMA DE VENDAS                     
         #                                                         
         #  TOTAL DE REGISTROS:                                    
-        #      1 - Alunos:         {str(self.get_documents_count(collection_name="Alunos")).rjust(5)}
-        #      2 - Exercicios:         {str(self.get_documents_count(collection_name="Exercicios")).rjust(5)}
+        #      1 - Alunos:         {str(self.get_documents_count(collection_name="alunos")).rjust(5)}
+        #      2 - Exercicios:         {str(self.get_documents_count(collection_name="exercicios")).rjust(5)}
         #
         #  CRIADO POR: {self.created_by}
         #

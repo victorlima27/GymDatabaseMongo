@@ -34,7 +34,7 @@ def query_count(collection_name):
    df = pd.DataFrame({f"total_{collection_name}": [total_documentos]})
    return df
 
-def clear_console(wait_time:int=5):
+def clear_console(wait_time:int=2):
     '''
        Esse método limpa a tela após alguns segundos
        wait_time: argumento de entrada que indica o tempo de espera

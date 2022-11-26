@@ -1,5 +1,5 @@
 from numpy import int0
-from model.exercicios import Exercicios
+from model.Exercicios import Exercicios
 
 
 class Alunos:

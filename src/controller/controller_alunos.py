@@ -23,11 +23,11 @@ class Controller_Cliente:
             pagamento = input("Pagamento (A para adimplente e I para inadimplente): ")
             vencimento_mensalidade = input("Dia de vencimento da mensalidade: ")
 
-            #Controller_Exercicios.listar_exercicios(self,oracle,need_connect= True)
+            self.listar_alunos()
             exercicio = input("Digite exercicio preferido: ")
 
             # Insere e persiste o novo cliente
-            self.mongo.db["Alunos"].insert_one({"Cpf": cpf, "Nome_Aluno": nome,"Telefone": telefone,"Pagamento":pagamento,"Vencimento_Mensalidade": vencimento_mensalidade,"Alunos_Exercicio": exercicio})
+            self.mongo.db["alunos"].insert_one({"Cpf": cpf, "Nome_Aluno": nome,"Telefone": telefone,"Pagamento":pagamento,"Vencimento_Mensalidade": vencimento_mensalidade,"Alunos_Exercicio": exercicio})
             # Recupera os dados do novo cliente criado transformando em um DataFrame
             df_aluno = self.recupera_cliente(cpf)
             # Cria um novo objeto Cliente
@@ -128,7 +128,7 @@ class Controller_Cliente:
             # Recupera os dados do novo cliente criado transformando em um DataFrame
             df_aluno = self.recupera_aluno(cpf)
             # Revome o cliente da tabela
-            self.mongo.db["Alunos"].delete_one({"Cpf":f"{cpf}"})
+            self.mongo.db["alunos"].delete_one({"Cpf":f"{cpf}"})
 
             df_aluno = self.recupera_aluno(cpf)
 
@@ -144,7 +144,7 @@ class Controller_Cliente:
             aluno_excluido = Alunos(nome,cpf,pagamento,vencimento,telefone,alunos_exercicios)
             self.mongo.close()
             # Exibe os atributos do cliente excluído
-            print("ALuno Removido com Sucesso!")
+            print("Aluno Removido com Sucesso!")
             print(aluno_excluido.to_string())
         else:
             self.mongo.close()
@@ -159,7 +159,7 @@ class Controller_Cliente:
             self.mongo.connect()
 
         # Recupera os dados do novo cliente criado transformando em um DataFrame
-        df_aluno = pd.DataFrame(self.mongo.db["ALunos"].find({"Cpf":f"{cpf}"}, {"Cpf": 1, "Nome_Aluno": 1, "_id": 0}))
+        df_aluno = pd.DataFrame(list(self.mongo.db['alunos'].find({"Cpf":f"{cpf}"}, {"Cpf": 1, "Nome_Aluno": 1, "Pagamento":1, "Vencimento_Mensalidade":1,"Alunos_Exercicios":1, "Telefone":1, "_id": 0})))
 
         if external:
             # Fecha a conexão com o Mongo
@@ -176,10 +176,21 @@ class Controller_Cliente:
             self.mongo.connect()
 
         # Recupera os dados do novo cliente criado transformando em um DataFrame
-        df_aluno = pd.DataFrame(list(self.mongo.db["Alunos"].find({"Cpf":f"{cpf}"}, {"cpf": 1, "Nome_Aluno": 1, "_id": 0})))
+
+        df_aluno = pd.DataFrame(list(self.mongo.db['alunos'].find({"Cpf":f"{cpf}"}, {"Cpf": 1, "Nome_Aluno": 1, "Pagamento":1, "Vencimento_Mensalidade":1,"Alunos_Exercicios":1, "Telefone":1, "_id": 0})))
         
         if external:
             # Fecha a conexão com o Mongo
             self.mongo.close()
 
         return df_aluno
+
+    def listar_alunos(self, external:bool=False) -> bool:
+
+        query = """db.getCollection('alunos').find({})"""
+
+
+        if external:
+            # Cria uma nova conexão com o banco que permite alteração
+            self.mongo.connect()
+        print(pd.DataFrame(query))
